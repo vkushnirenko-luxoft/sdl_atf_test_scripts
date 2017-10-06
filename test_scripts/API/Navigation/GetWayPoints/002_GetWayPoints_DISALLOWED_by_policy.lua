@@ -16,8 +16,7 @@
 ---------------------------------------------------------------------------------------------------
 --[[ Required Shared libraries ]]
 local runner = require('user_modules/script_runner')
-local commonNavigation = require('test_scripts/API/Navigation/commonNavigation')
-local commonTestCases = require('user_modules/shared_testcases/commonTestCases')
+local common = require('test_scripts/API/Navigation/commonNavigation')
 
 --[[ Local Functions ]]
 local function getWayPoints(self)
@@ -27,18 +26,22 @@ local function getWayPoints(self)
   local cid = self.mobileSession1:SendRPC("GetWayPoints", params)
   EXPECT_HMICALL("Navigation.GetWayPoints", params):Times(0)
   self.mobileSession1:ExpectResponse(cid, { success = false, resultCode = "DISALLOWED" })
-  commonTestCases:DelayedExp(commonNavigation.timeout)
+  common:DelayedExp()
+end
+
+local function ptuUpdateFunc(pTbl)
+  pTbl.policy_table.functional_groupings["WayPoints"].rpcs.GetWayPoints = nil
 end
 
 --[[ Scenario ]]
 runner.Title("Preconditions")
-runner.Step("Clean environment", commonNavigation.preconditions)
-runner.Step("Start SDL, HMI, connect Mobile, start Session", commonNavigation.start)
-runner.Step("RAI", commonNavigation.raiN)
-runner.Step("Activate App", commonNavigation.activateApp)
+runner.Step("Clean environment", common.preconditions)
+runner.Step("Start SDL, HMI, connect Mobile, start Session", common.start)
+runner.Step("RAI", common.registerAppWithPTU, { common.appId1, ptuUpdateFunc })
+runner.Step("Activate App", common.activateApp)
 
 runner.Title("Test")
 runner.Step("GetWayPoints, DISALLOWED by policy", getWayPoints)
 
 runner.Title("Postconditions")
-runner.Step("Stop SDL", commonNavigation.postconditions)
+runner.Step("Stop SDL", common.postconditions)

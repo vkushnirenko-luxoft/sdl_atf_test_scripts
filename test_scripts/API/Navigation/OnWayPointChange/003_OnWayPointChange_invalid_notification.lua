@@ -18,26 +18,25 @@
 ---------------------------------------------------------------------------------------------------
 --[[ Required Shared libraries ]]
 local runner = require('user_modules/script_runner')
-local commonNavigation = require('test_scripts/API/Navigation/commonNavigation')
-local commonTestCases = require('user_modules/shared_testcases/commonTestCases')
+local common = require('test_scripts/API/Navigation/commonNavigation')
 
 --[[ Local Functions ]]
 local function emptyNotification(self)
   self.hmiConnection:SendNotification("Navigation.OnWayPointChange", {})
   self.mobileSession1:ExpectNotification("OnWayPointChange"):Times(0)
-  commonTestCases:DelayedExp(commonNavigation.timeout)
+  common:DelayedExp()
 end
 
 --[[ Scenario ]]
 runner.Title("Preconditions")
-runner.Step("Clean environment", commonNavigation.preconditions)
-runner.Step("Start SDL, HMI, connect Mobile, start Session", commonNavigation.start)
-runner.Step("RAI, PTU", commonNavigation.registerAppWithPTU)
-runner.Step("Activate App", commonNavigation.activateApp)
+runner.Step("Clean environment", common.preconditions)
+runner.Step("Start SDL, HMI, connect Mobile, start Session", common.start)
+runner.Step("RAI, PTU", common.registerAppWithPTU)
+runner.Step("Activate App", common.activateApp)
 
 runner.Title("Test")
-runner.Step("Subscribe OnWayPointChange", commonNavigation.subscribeOnWayPointChange, { 1 })
+runner.Step("Subscribe OnWayPointChange", common.subscribeWayPoints)
 runner.Step("OnWayPointChange emptyNotification", emptyNotification)
 
 runner.Title("Postconditions")
-runner.Step("Stop SDL", commonNavigation.postconditions)
+runner.Step("Stop SDL", common.postconditions)
