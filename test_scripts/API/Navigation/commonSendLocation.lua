@@ -443,4 +443,20 @@ function commonSendLocation.printResultCodes(pResultCodes)
   printItem(pResultCodes.unexpected)
 end
 
+--[[ @filterTable: remove from 1st table items provided in 2nd table
+--! @parameters:
+--! pFilteredTbl - table which will be filtered
+--! pValuesTbl - table with values that are going to be removed
+--]]
+function commonSendLocation.filterTable(pFilteredTbl, pValuesTbl)
+  local i = 1
+  while i <= #pFilteredTbl do
+    if isContain(pValuesTbl, pFilteredTbl[i]) then
+      table.remove(pFilteredTbl, i)
+    else
+      i = i + 1
+    end
+  end
+end
+
 return commonSendLocation
