@@ -14,7 +14,6 @@ local file_connection = require("file_connection")
 local mobile = require("mobile_connection")
 local events = require("events")
 local expectations = require('expectations')
-local hmi_values = require('user_modules/hmi_values')
 local module = require("user_modules/dummy_connecttest")
 
 --[[ Local Variables ]]
@@ -27,13 +26,15 @@ m.device = {
     id = "127.0.0.1",
     port = 23456,
     out = "iap2bt.out",
-    type = "BLUETOOTH"
+    type = "BLUETOOTH",
+    uid = "127.0.0.1:23456"
   },
   usb = {
     id = "127.0.0.1",
     port = 34567,
     out = "iap2usb.out",
-    type = "USB_IOS"
+    type = "USB_IOS",
+    uid = "127.0.0.1:34567"
   }
 }
 
@@ -89,6 +90,25 @@ function module:connectMobile(pDevice)
     end)
   pDevice:Connect()
   return module:expectEvent(events.connectedEvent, "Connected", pDevice)
+end
+
+function module:doTransportSwitch(device)
+  local input = io.open(config.pathToSDL.."/iap_signals_in", "w")
+  if not input then print("Input signals channel not opened") return end
+  local input_signal = "SDL_TRANSPORT_SWITCH"
+  input:write(input_signal)
+  print("Signal "..input_signal.." sent")
+  input:close()       
+  
+  local output = io.open(config.pathToSDL.."/iap_signals_out", "r")
+  if not output then print("Output signals channel not opened") return end
+  print("Waiting for ACK")
+  local out = output:read()
+  print("Got signal: "..out)
+  if out ~= "SDL_TRANSPORT_SWITCH_ACK" then print("Unexpected signal") return end
+  output:close()
+
+  device:Close()
 end
 
 function m.preconditions()

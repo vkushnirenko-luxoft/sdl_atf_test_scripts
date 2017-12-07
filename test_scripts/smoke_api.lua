@@ -1,6 +1,6 @@
 ---------------------------------------------------------------------------------------------
 --[[ General configuration parameters ]]
-config.deviceMAC = "12ca17b49af2289436f303e0166030a21e525d266e209267433801a8fd4071a0"
+config.deviceMAC = "c17d9e6f098bf334afc8862a6cb543a48d85f885d38788b2a818662b239aa6c6"
 
 --[[ Required Shared libraries ]]
 local commonPreconditions = require('user_modules/shared_testcases/commonPreconditions')
@@ -4318,7 +4318,7 @@ function Test:RegisterAppInterface_WithConditionalParams()
 	       	ngnMediaScreenAppName ="SPT",
 	       	deviceInfo =
 						{
-							name = "127.0.0.1",
+							name = "127.0.0.1:12345",
 							id = config.deviceMAC,
 							transportType = "WIFI",
 							isSDLAllowed = true
