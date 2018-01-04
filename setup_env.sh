@@ -27,21 +27,36 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Repository for Qt 5.3
-sudo add-apt-repository --yes  ppa:beineri/opt-qt532-trusty
-sudo add-apt-repository ppa:ubuntu-toolchain-r/test
-sudo apt-get -qq update
+# Vars
+os=`lsb_release -c | awk '{print $2}'`
+if [ $os = xenial ];
+  then qtrepo=ppa:beineri/opt-qt593-xenial;
+       qt5base=qt59base
+       qt5websockets=qt59websockets
+elif [ $os = trusty ];
+  then qtrepo=ppa:beineri/opt-qt532-trusty;
+       qt5base=qt53base
+       qt5websockets=qt53websockets
+fi
+
+export LC_ALL=C
+
+# Repository for Qt 5.3 (ubuntu14)
+#                Qt 5.9 (ubuntu16)
+sudo add-apt-repository --yes $qtrepo
+sudo add-apt-repository --yes ppa:ubuntu-toolchain-r/test
+sudo apt-get update
 
 
 # SDL build dependencies
 sudo apt-get -q -y install cmake gcc-4.9 g++-4.9 libssl-dev libbluetooth3 libbluetooth-dev libudev-dev libavahi-client-dev bluez-tools sqlite3 libsqlite3-dev automake1.11 libexpat1-dev
 
 # ATF build dependencies
-sudo apt-get -q -y install qt53base qt53websockets liblua5.2-dev libxml2-dev lua-lpeg-dev libgl1-mesa-dev
+sudo apt-get -q -y install $qt5base $qt5websockets liblua5.2-dev libxml2-dev lua-lpeg-dev libgl1-mesa-dev
 
 # sdl_atf_scripts dependencies
-sudo apt-get -q -y install python2.7 python-pip python-flake8  openssh-server 
-sudo pip install fabric
+sudo apt-get -q -y install python2.7 python-pip python-flake8  openssh-server
+sudo pip install fabric  #errors
 
 # Some scripts require managing system network
 # So it should be possible to run ifconfig from user
