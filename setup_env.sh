@@ -28,11 +28,11 @@
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
 # Repository for Qt 5
-if [[`lsb_release -c` == *trusty]]
+if [`lsb_release -c` == *trusty]
   then qt_repo=ppa:beineri/opt-qt532-trusty
        qtbase=qt53base
        qtwebsockets=qt53websockets
-elif [[`lsb_release -c` == *xenial]]
+elif [`lsb_release -c` == *xenial]
   then qt_repo=ppa:beineri/opt-qt59-xenial
        qtbase=qt59base
        qtwebsockets=qt59websockets
