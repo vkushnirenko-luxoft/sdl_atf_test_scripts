@@ -27,8 +27,18 @@
 # OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE
 # OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 
-# Repository for Qt 5.3
-sudo add-apt-repository --yes  ppa:beineri/opt-qt532-trusty
+# Repository for Qt 5
+if [[`lsb_release -c` == *trusty]]
+  then qt_repo=ppa:beineri/opt-qt532-trusty
+       qtbase=qt53base
+       qtwebsockets=qt53websockets
+elif [[`lsb_release -c` == *xenial]]
+  then qt_repo=ppa:beineri/opt-qt59-xenial
+       qtbase=qt59base
+       qtwebsockets=qt59websockets
+fi
+
+sudo add-apt-repository --yes $qt_repo
 sudo add-apt-repository ppa:ubuntu-toolchain-r/test
 sudo apt-get -qq update
 
@@ -37,7 +47,7 @@ sudo apt-get -qq update
 sudo apt-get -q -y install cmake gcc-4.9 g++-4.9 libssl-dev libbluetooth3 libbluetooth-dev libudev-dev libavahi-client-dev bluez-tools sqlite3 libsqlite3-dev automake1.11 libexpat1-dev
 
 # ATF build dependencies
-sudo apt-get -q -y install qt53base qt53websockets liblua5.2-dev libxml2-dev lua-lpeg-dev libgl1-mesa-dev
+sudo apt-get -q -y install qtbase qtwebsockets liblua5.2-dev libxml2-dev lua-lpeg-dev libgl1-mesa-dev
 
 # sdl_atf_scripts dependencies
 sudo apt-get -q -y install python2.7 python-pip python-flake8  openssh-server 
